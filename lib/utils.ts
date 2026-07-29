@@ -47,3 +47,47 @@ export function getDiscountedPrice(price: number, discount: number): number {
 export function randomBetween(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export function formatDateTime(iso: string): string {
+  return new Date(iso).toLocaleString('en-PK', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
+}
+
+/**
+ * Spell out a rupee amount using the South-Asian numbering system
+ * (thousand → lakh → crore). Used for the receipt's "amount in words" line.
+ */
+export function amountInWords(value: number): string {
+  let num = Math.round(value);
+  if (num === 0) return 'Zero Rupees Only';
+
+  const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+    'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+  const twoDigit = (n: number): string =>
+    n < 20 ? ones[n] : tens[Math.floor(n / 10)] + (n % 10 ? ' ' + ones[n % 10] : '');
+  const threeDigit = (n: number): string => {
+    const h = Math.floor(n / 100);
+    const r = n % 100;
+    return (h ? ones[h] + ' Hundred' + (r ? ' ' : '') : '') + (r ? twoDigit(r) : '');
+  };
+
+  const crore = Math.floor(num / 10000000); num %= 10000000;
+  const lakh = Math.floor(num / 100000); num %= 100000;
+  const thousand = Math.floor(num / 1000); num %= 1000;
+
+  let words = '';
+  if (crore) words += threeDigit(crore) + ' Crore ';
+  if (lakh) words += twoDigit(lakh) + ' Lakh ';
+  if (thousand) words += twoDigit(thousand) + ' Thousand ';
+  if (num) words += threeDigit(num);
+
+  return 'Rupees ' + words.trim().replace(/\s+/g, ' ') + ' Only';
+}

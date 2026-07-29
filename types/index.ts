@@ -116,3 +116,40 @@ export interface FAQItem {
   question: string;
   answer: string;
 }
+
+export type PaymentMethod = 'cod' | 'bank' | 'card';
+
+export interface CustomerInfo {
+  name: string;
+  phone: string;
+  email?: string;
+  address: string;
+  city: string;
+  notes?: string;
+}
+
+/** A line item snapshot captured at checkout time (decoupled from the live catalog). */
+export interface OrderItem {
+  id: string;
+  name: string;
+  brand: string;
+  sku: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
+
+export interface Order {
+  id: string;           // opaque id used in the receipt URL
+  orderNumber: string;  // human-friendly, e.g. CHY-260729-4821
+  date: string;         // ISO timestamp
+  customer: CustomerInfo;
+  items: OrderItem[];
+  subtotal: number;
+  deliveryFee: number;
+  discount: number;
+  discountCode?: string;
+  total: number;
+  paymentMethod: PaymentMethod;
+  status: 'confirmed';
+}

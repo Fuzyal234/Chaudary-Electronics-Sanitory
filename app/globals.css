@@ -290,6 +290,37 @@ input[type=range]::-webkit-slider-thumb {
   will-change: transform, opacity;
 }
 
+/* Receipt / invoice print — isolate the paper, drop the chrome */
+@media print {
+  body {
+    background: #ffffff !important;
+    overflow: visible !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .receipt-print,
+  .receipt-print * {
+    visibility: visible;
+  }
+  .receipt-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  @page {
+    margin: 14mm;
+  }
+}
+
 /* Respect user motion preference */
 @media (prefers-reduced-motion: reduce) {
   *,

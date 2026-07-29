@@ -4,11 +4,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingCart, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useApp } from '@/context/AppContext';
 import { formatPrice } from '@/lib/utils';
 
 export default function CartSidebar() {
   const { cartOpen, setCartOpen, cart, cartTotal, cartCount, updateQuantity, removeFromCart, clearCart } = useApp();
+  const router = useRouter();
+
+  const goToCheckout = () => {
+    setCartOpen(false);
+    router.push('/checkout');
+  };
 
   return (
     <>
@@ -129,7 +136,7 @@ export default function CartSidebar() {
                     Add <strong className="text-emerald-500">{formatPrice(5000 - cartTotal)}</strong> more for free delivery
                   </p>
                 )}
-                <button className="w-full py-3.5 bg-secondary text-white rounded-xl font-bold text-sm hover:bg-secondary-dark transition-colors shadow-lg hover:shadow-secondary/30">
+                <button onClick={goToCheckout} className="w-full py-3.5 bg-secondary text-white rounded-xl font-bold text-sm hover:bg-secondary-dark transition-colors shadow-lg hover:shadow-secondary/30">
                   Proceed to Checkout
                 </button>
                 <div className="flex gap-3">
