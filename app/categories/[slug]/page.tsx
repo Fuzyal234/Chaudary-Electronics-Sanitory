@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ChevronRight, Grid3X3, List } from 'lucide-react';
 import { getCategoryBySlug } from '@/data/categories';
-import { getProductsByCategory } from '@/data/products';
+import { useCatalog } from '@/context/CatalogContext';
 import ProductCard from '@/components/products/ProductCard';
 import QuickViewModal from '@/components/products/QuickViewModal';
 import { Product } from '@/types';
@@ -13,6 +13,7 @@ import { notFound } from 'next/navigation';
 
 export default function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
+  const { getProductsByCategory } = useCatalog();
   const category = getCategoryBySlug(slug);
 
   if (!category) notFound();
@@ -25,7 +26,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
     <>
       {/* Header */}
       <div className="bg-primary py-14">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 text-slate-400 text-sm mb-4">
             <Link href="/" className="hover:text-accent transition-colors">Home</Link>
             <ChevronRight size={14} />
@@ -46,7 +47,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
       </div>
 
       {/* Products */}
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-8 py-10">
+      <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 py-10">
         <div className="flex items-center justify-between mb-8">
           <p className="text-slate-500 dark:text-slate-400 text-sm">
             {products.length > 0 ? `${products.length} products in ${category.name}` : `No products yet in ${category.name}`}

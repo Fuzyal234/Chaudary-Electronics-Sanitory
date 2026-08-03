@@ -1,72 +1,103 @@
 'use client';
 
-import { useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Mail, ArrowRight, CheckCircle } from 'lucide-react';
+import { Phone, MessageCircle, MapPin, ArrowRight, Clock } from 'lucide-react';
+import { STORE } from '@/lib/store';
+
+/**
+ * The sign-off. A hardware customer's next step is almost never "subscribe" —
+ * it is "call the counter" or "come round". The newsletter lives in the footer;
+ * this closes the page on the shop itself.
+ */
+const hours = [
+  { day: 'Monday – Friday', time: '9:00 AM – 8:00 PM' },
+  { day: 'Saturday', time: '9:00 AM – 6:00 PM' },
+  { day: 'Sunday', time: 'Closed', closed: true },
+];
 
 export default function Newsletter() {
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) setSubmitted(true);
-  };
-
   return (
-    <section className="py-16 lg:py-20 bg-white dark:bg-dark-bg">
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-8">
+    <section className="py-14 sm:py-20 lg:py-24 bg-bg dark:bg-dark-bg">
+      <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-2xl mx-auto text-center"
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="relative overflow-hidden rounded-3xl field-dark border border-white/20 shadow-[0_30px_70px_-40px_rgba(13,26,45,0.9)]"
         >
-          <div className="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center mx-auto mb-6">
-            <Mail size={28} className="text-secondary" />
+          <div className="absolute inset-0 dotfield opacity-30 pointer-events-none" />
+
+          <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10 lg:gap-16 p-8 sm:p-12 lg:p-14 items-center">
+            <div>
+              <span className="t-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-white/10 border border-white/25 text-accent-light mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                Talk to the counter
+              </span>
+
+              <h2 className="t-display text-[2.2rem] sm:text-[2.9rem] lg:text-[3.3rem] text-white">
+                Not sure which part
+                <span className="gradient-text"> you need?</span>
+              </h2>
+
+              <p className="mt-5 text-[16px] text-white/75 leading-relaxed max-w-xl">
+                Send us a photo of the fitting or the old breaker. Someone who has specified it a
+                hundred times will tell you exactly what to order.
+              </p>
+
+              <div className="flex flex-wrap gap-3 mt-9">
+                <a
+                  href={`https://wa.me/${STORE.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2.5 px-7 py-4 rounded-xl bg-secondary text-white font-display font-semibold text-[15px] hover:bg-secondary-light transition-colors shadow-[0_12px_30px_-12px_rgba(30,90,200,0.95)]"
+                >
+                  <MessageCircle size={17} />
+                  WhatsApp us
+                </a>
+                <a
+                  href={`tel:${STORE.phones[0].replace(/\s/g, '')}`}
+                  className="inline-flex items-center gap-2.5 px-7 py-4 rounded-xl bg-white/10 border border-white/25 text-white font-display font-semibold text-[15px] hover:bg-white/16 transition-colors"
+                >
+                  <Phone size={17} />
+                  {STORE.phones[0]}
+                </a>
+                <Link
+                  href="/contact"
+                  className="group inline-flex items-center gap-2 px-5 py-4 text-white/75 font-display font-semibold text-[15px] hover:text-white transition-colors"
+                >
+                  Find us
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Hours — the practical detail people actually look for */}
+            <div className="rounded-2xl bg-white/[0.07] border border-white/25 overflow-hidden">
+              <div className="flex items-center gap-2.5 px-5 py-4 border-b border-white/20">
+                <MapPin size={15} className="text-accent-light flex-shrink-0" />
+                <span className="text-[13.5px] text-white/85">{STORE.address}, {STORE.city}</span>
+              </div>
+              <div className="px-5 py-2">
+                <div className="flex items-center gap-2 pt-3 pb-1">
+                  <Clock size={14} className="text-accent-light" />
+                  <span className="t-eyebrow text-white/70">Opening hours</span>
+                </div>
+                {hours.map((h) => (
+                  <div
+                    key={h.day}
+                    className="flex items-center justify-between py-3 border-b border-white/15 last:border-0"
+                  >
+                    <span className="text-[13.5px] text-white/75">{h.day}</span>
+                    <span className={`text-[13px] font-display font-semibold ${h.closed ? 'text-white/55' : 'text-white'}`}>
+                      {h.time}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <h2 className="font-heading text-3xl lg:text-4xl font-bold text-primary dark:text-white mb-4">
-            Get Exclusive Deals &{' '}
-            <span className="gradient-text">Offers</span>
-          </h2>
-          <p className="text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
-            Subscribe to our newsletter and be the first to know about new arrivals, exclusive discounts, and construction tips from our experts.
-          </p>
-
-          {submitted ? (
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="flex items-center justify-center gap-3 text-emerald-600 font-semibold text-lg"
-            >
-              <CheckCircle size={28} className="text-emerald-500" />
-              Thank you! You&apos;re now subscribed.
-            </motion.div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
-                required
-                className="flex-1 px-5 py-3.5 rounded-xl border border-slate-200 dark:border-white/20 bg-white dark:bg-dark-card text-primary dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all text-sm"
-              />
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                type="submit"
-                className="flex items-center justify-center gap-2 px-6 py-3.5 bg-secondary text-white font-bold rounded-xl hover:bg-secondary-dark transition-colors shadow-lg shadow-secondary/30 text-sm whitespace-nowrap"
-              >
-                Subscribe <ArrowRight size={16} />
-              </motion.button>
-            </form>
-          )}
-
-          <p className="text-xs text-slate-400 mt-4">
-            By subscribing, you agree to our Privacy Policy. Unsubscribe anytime.
-          </p>
         </motion.div>
       </div>
     </section>

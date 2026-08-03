@@ -4,9 +4,9 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Search, ArrowRight, Clock, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import { useApp } from '@/context/AppContext';
-import { searchProducts } from '@/data/products';
+import { useCatalog } from '@/context/CatalogContext';
 import { formatPrice } from '@/lib/utils';
 
 const trending = ['Toilet', 'LED Panel', 'Water Pump', 'GM Wire', 'Ball Valve', 'Philips Bulb'];
@@ -14,13 +14,14 @@ const recent = ['Schneider MCB', 'Rain Shower', 'Kitchen Sink'];
 
 export default function SearchModal() {
   const { searchOpen, setSearchOpen } = useApp();
+  const { searchProducts } = useCatalog();
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Results are derived from the query — no effect/state duplication needed.
   const results = useMemo(
     () => (query.trim().length >= 2 ? searchProducts(query).slice(0, 6) : []),
-    [query]
+    [query, searchProducts]
   );
 
   const closeSearch = useCallback(() => {
@@ -67,10 +68,10 @@ export default function SearchModal() {
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-2xl bg-white dark:bg-dark-card rounded-2xl shadow-2xl overflow-hidden border border-slate-100 dark:border-white/10"
+            className="w-full max-w-2xl bg-white dark:bg-dark-card rounded-2xl shadow-2xl overflow-hidden border border-slate-100 dark:border-white/20"
           >
             {/* Search Input */}
-            <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-100 dark:border-white/10">
+            <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-100 dark:border-white/20">
               <Search size={22} className="text-secondary flex-shrink-0" />
               <input
                 ref={inputRef}
@@ -107,7 +108,7 @@ export default function SearchModal() {
                         className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group"
                       >
                         <div className="w-14 h-14 rounded-xl bg-slate-100 dark:bg-white/10 overflow-hidden flex-shrink-0 relative">
-                          <Image src={product.images[0]} alt={product.name} fill className="object-contain p-1" />
+                          <SmartImage src={product.images[0]} alt={product.name} fill className="object-contain p-1" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-primary dark:text-white text-sm group-hover:text-secondary transition-colors truncate">{product.name}</p>

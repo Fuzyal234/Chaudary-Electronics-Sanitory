@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { SlidersHorizontal, Grid3X3, List, X, Search } from 'lucide-react';
-import { products as allProducts } from '@/data/products';
+import { useCatalog } from '@/context/CatalogContext';
 import { categories } from '@/data/categories';
 import { brands } from '@/data/brands';
 import { FilterState, Product } from '@/types';
@@ -22,6 +22,7 @@ const defaultFilters: FilterState = {
 };
 
 export default function ProductsPage() {
+  const { products: allProducts } = useCatalog();
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,7 +48,7 @@ export default function ProductsPage() {
       if (filters.sortBy === 'name') return a.name.localeCompare(b.name);
       return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
     });
-  }, [filters, searchQuery]);
+  }, [filters, searchQuery, allProducts]);
 
   const toggleCategory = (cat: string) =>
     setFilters((f) => ({
@@ -74,7 +75,7 @@ export default function ProductsPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search products..."
-          className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 dark:border-white/15 bg-white dark:bg-white/5 text-sm focus:outline-none focus:border-secondary transition-colors placeholder:text-slate-400"
+          className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 dark:border-white/25 bg-white dark:bg-white/5 text-sm focus:outline-none focus:border-secondary transition-colors placeholder:text-slate-400"
         />
       </div>
 
@@ -129,14 +130,14 @@ export default function ProductsPage() {
   return (
     <>
       {/* Header */}
-      <div className="border-b border-slate-200 dark:border-white/10 bg-white dark:bg-dark-card">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8 py-6">
+      <div className="border-b border-slate-200 dark:border-white/20 bg-white dark:bg-dark-card">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 py-6">
           <h1 className="text-2xl font-bold text-slate-800 dark:text-white">All Products</h1>
           <p className="text-sm text-slate-400 mt-0.5">{allProducts.length} items</p>
         </div>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-5 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
 
           {/* Desktop sidebar */}
@@ -159,14 +160,14 @@ export default function ProductsPage() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setSidebarOpen(true)}
-                  className="lg:hidden flex items-center gap-1.5 px-3 py-2 border border-slate-200 dark:border-white/15 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:border-secondary hover:text-secondary transition-colors"
+                  className="lg:hidden flex items-center gap-1.5 px-3 py-2 border border-slate-200 dark:border-white/25 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:border-secondary hover:text-secondary transition-colors"
                 >
                   <SlidersHorizontal size={14} /> Filters
                 </button>
                 <span className="text-sm text-slate-500">{filtered.length} products</span>
               </div>
 
-              <div className="flex items-center gap-1 border border-slate-200 dark:border-white/15 rounded-lg p-0.5">
+              <div className="flex items-center gap-1 border border-slate-200 dark:border-white/25 rounded-lg p-0.5">
                 <button
                   onClick={() => setFilters((f) => ({ ...f, viewMode: 'grid' }))}
                   className={`p-1.5 rounded-md transition-colors ${filters.viewMode === 'grid' ? 'bg-secondary text-white' : 'text-slate-400 hover:text-secondary'}`}
@@ -255,7 +256,7 @@ export default function ProductsPage() {
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               className="fixed left-0 top-0 bottom-0 w-72 bg-white dark:bg-dark-card z-50 shadow-xl overflow-y-auto"
             >
-              <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-white/10">
+              <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-white/20">
                 <span className="font-semibold text-slate-800 dark:text-white">Filters</span>
                 <button onClick={() => setSidebarOpen(false)} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
                   <X size={16} />
@@ -264,7 +265,7 @@ export default function ProductsPage() {
               <div className="p-4">
                 {sidebar}
               </div>
-              <div className="p-4 border-t border-slate-100 dark:border-white/10">
+              <div className="p-4 border-t border-slate-100 dark:border-white/20">
                 <button
                   onClick={() => setSidebarOpen(false)}
                   className="w-full py-2.5 bg-secondary text-white rounded-lg text-sm font-semibold hover:bg-secondary-dark transition-colors"

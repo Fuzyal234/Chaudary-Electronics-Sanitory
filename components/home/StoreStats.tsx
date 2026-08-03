@@ -2,26 +2,27 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Users, Package, Award, MapPin, TrendingUp, Star } from 'lucide-react';
+import SectionHeader from '@/components/ui/SectionHeader';
 
+/** The record. Six figures, no icons — the numbers are the argument. */
 const stats = [
-  { icon: Users, value: 10000, suffix: '+', label: 'Happy Customers', description: 'Trusted by homeowners & contractors' },
-  { icon: Package, value: 850, suffix: '+', label: 'Products', description: 'Across 18+ categories' },
-  { icon: Award, value: 13, suffix: '+', label: 'Premium Brands', description: 'Local and international brands' },
-  { icon: MapPin, value: 20, suffix: '+', label: 'Years Experience', description: 'Serving since 2003' },
-  { icon: TrendingUp, value: 50000, suffix: '+', label: 'Orders Delivered', description: 'Across Punjab and nationwide' },
-  { icon: Star, value: 4.9, suffix: '/5', label: 'Customer Rating', description: 'Average satisfaction score', decimal: true },
+  { value: 10000, suffix: '+', label: 'Customers served', note: 'Homeowners, plumbers and contractors' },
+  { value: 850,   suffix: '+', label: 'Products stocked', note: 'Across 18 departments' },
+  { value: 13,    suffix: '',  label: 'Brands carried', note: 'Master, Sonex, Schneider, Philips and more' },
+  { value: 22,    suffix: '',  label: 'Years at the counter', note: 'Trading in Lahore since 2003' },
+  { value: 50000, suffix: '+', label: 'Orders delivered', note: 'Punjab and nationwide' },
+  { value: 4.9,   suffix: '/5', label: 'Customer rating', note: 'Average across verified orders', decimal: true },
 ];
 
 function CountUp({ target, suffix, decimal }: { target: number; suffix: string; decimal?: boolean }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-100px' });
+  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   useEffect(() => {
     if (!inView) return;
-    const duration = 2000;
-    const steps = 60;
+    const duration = 1600;
+    const steps = 50;
     const increment = target / steps;
     let current = 0;
     const timer = setInterval(() => {
@@ -38,49 +39,43 @@ function CountUp({ target, suffix, decimal }: { target: number; suffix: string; 
 
   return (
     <span ref={ref}>
-      {decimal ? count.toFixed(1) : Math.floor(count).toLocaleString('en-PK')}{suffix}
+      {decimal ? count.toFixed(1) : Math.floor(count).toLocaleString('en-PK')}
+      <span className="text-accent-light">{suffix}</span>
     </span>
   );
 }
 
 export default function StoreStats() {
   return (
-    <section className="py-20 lg:py-28 relative overflow-hidden bg-primary">
+    <section className="relative py-14 sm:py-20 lg:py-24 field-dark text-white overflow-hidden">
+      <div className="absolute inset-0 dotfield opacity-35 pointer-events-none" />
 
-      <div className="relative max-w-screen-2xl mx-auto px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-14"
-        >
-          <span className="inline-flex items-center gap-2 text-accent text-xs font-bold tracking-[0.2em] uppercase mb-4">
-            <span className="h-px w-8 bg-accent" /> Our Numbers <span className="h-px w-8 bg-accent" />
-          </span>
-          <h2 className="font-heading text-4xl lg:text-5xl font-bold text-white">
-            Trusted by Thousands <br />
-            <span className="text-accent">Across Pakistan</span>
-          </h2>
-        </motion.div>
+      <div className="relative max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-10">
+        <SectionHeader
+          badge="The record"
+          title="Twenty-two years of the same"
+          highlight="shopfront."
+          subtitle="Numbers a supplier can be judged on, kept up to date."
+          align="center"
+          dark
+          className="mb-14"
+        />
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-px bg-white/10 rounded-2xl overflow-hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
           {stats.map((stat, i) => (
             <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ delay: i * 0.08, duration: 0.5 }}
-              className="flex flex-col items-center text-center p-8 glass hover:bg-white/15 transition-colors group"
+              key={stat.label}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="card-dark p-7 lg:p-8"
             >
-              <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors">
-                <stat.icon size={22} className="text-accent" />
-              </div>
-              <div className="font-heading text-3xl lg:text-4xl font-black text-white mb-1">
+              <div className="t-figure text-[2.4rem] lg:text-[3rem] leading-none text-white">
                 <CountUp target={stat.value} suffix={stat.suffix} decimal={stat.decimal} />
               </div>
-              <div className="font-semibold text-white text-sm mb-1">{stat.label}</div>
-              <div className="text-slate-400 text-xs">{stat.description}</div>
+              <div className="font-display font-semibold text-[15px] text-white mt-4">{stat.label}</div>
+              <div className="text-[13px] text-white/70 mt-1.5 leading-relaxed">{stat.note}</div>
             </motion.div>
           ))}
         </div>

@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, Heart, Plus, Minus, ChevronRight, Truck, ShieldCheck, RotateCcw, Star } from 'lucide-react';
-import { getProductById, getProductsByCategory } from '@/data/products';
+import { useCatalog } from '@/context/CatalogContext';
 import { useApp } from '@/context/AppContext';
 import { formatPrice } from '@/lib/utils';
 import Badge from '@/components/ui/Badge';
@@ -17,18 +17,14 @@ import { Product } from '@/types';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const product = getProductById(id);
-
-  if (!product) notFound();
-
+  const { getProductById, getProductsByCategory, ready } = useCatalog();
   const { addToCart, toggleWishlist, isInWishlist, addToRecentlyViewed } = useApp();
   const [qty, setQty] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'features' | 'reviews'>('description');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
-  const inWishlist = isInWishlist(product.id);
-  const related = getProductsByCategory(product.category).filter((p) => p.id !== product.id).slice(0, 5);
+  const product = getProductById(id);
 
   // Record this product in the user's recently-viewed history.
   useEffect(() => {
@@ -36,9 +32,33 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product?.id]);
 
+  // The catalog hydrates from localStorage on the client, so wait for it before
+  // 404ing — otherwise an admin-added product would flash "not found".
+  if (!product) {
+    if (!ready) {
+      return (
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-5 sm:px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14">
+            <div className="aspect-square rounded-[24px] bg-slate-100 dark:bg-white/5 animate-pulse" />
+            <div className="space-y-4">
+              <div className="h-6 w-32 rounded bg-slate-100 dark:bg-white/5 animate-pulse" />
+              <div className="h-10 w-3/4 rounded bg-slate-100 dark:bg-white/5 animate-pulse" />
+              <div className="h-24 w-full rounded bg-slate-100 dark:bg-white/5 animate-pulse" />
+              <div className="h-12 w-full rounded bg-slate-100 dark:bg-white/5 animate-pulse" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+    notFound();
+  }
+
+  const inWishlist = isInWishlist(product.id);
+  const related = getProductsByCategory(product.category).filter((p) => p.id !== product.id).slice(0, 5);
+
   return (
     <>
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-5 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-slate-400 mb-8 flex-wrap">
           <Link href="/" className="hover:text-secondary transition-colors">Home</Link>
@@ -53,7 +73,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 mb-16">
           {/* Gallery */}
           <div className="space-y-4">
-            <div className="relative aspect-square rounded-[24px] overflow-hidden bg-slate-50 dark:bg-dark-card border border-slate-100 dark:border-white/10">
+            <div className="relative aspect-square rounded-[24px] overflow-hidden bg-slate-50 dark:bg-dark-card border border-slate-100 dark:border-white/20">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeImage}
@@ -63,7 +83,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   transition={{ duration: 0.3 }}
                   className="absolute inset-0"
                 >
-                  <Image src={product.images[activeImage] || product.images[0]} alt={product.name} fill className="object-contain p-8" />
+                  <SmartImage src={product.images[activeImage] || product.images[0]} alt={product.name} fill className="object-contain p-8" />
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -74,9 +94,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   <button
                     key={i}
                     onClick={() => setActiveImage(i)}
-                    className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all bg-slate-50 dark:bg-dark-card ${activeImage === i ? 'border-secondary shadow-lg' : 'border-slate-100 dark:border-white/10 hover:border-secondary/50'}`}
+                    className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all bg-slate-50 dark:bg-dark-card ${activeImage === i ? 'border-secondary shadow-lg' : 'border-slate-100 dark:border-white/20 hover:border-secondary/50'}`}
                   >
-                    <Image src={img} alt="" fill className="object-contain p-1" />
+                    <SmartImage src={img} alt="" fill className="object-contain p-1" />
                   </button>
                 ))}
               </div>
@@ -173,7 +193,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 { icon: ShieldCheck, label: 'Genuine', sub: '100% Authentic' },
                 { icon: RotateCcw, label: '7-Day Return', sub: 'Easy returns' },
               ].map((item, i) => (
-                <div key={i} className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+                <div key={i} className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/20">
                   <item.icon size={20} className="text-secondary mb-1.5" />
                   <p className="text-xs font-bold text-primary dark:text-white">{item.label}</p>
                   <p className="text-[10px] text-slate-400">{item.sub}</p>
@@ -197,7 +217,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
         {/* Tabs */}
         <div className="mb-16">
-          <div className="flex border-b border-slate-200 dark:border-white/10 mb-8 gap-1 overflow-x-auto">
+          <div className="flex border-b border-slate-200 dark:border-white/20 mb-8 gap-1 overflow-x-auto">
             {(['description', 'specs', 'features', 'reviews'] as const).map((tab) => (
               <button
                 key={tab}
@@ -224,7 +244,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               )}
               {activeTab === 'specs' && (
                 <div className="max-w-2xl">
-                  <div className="rounded-xl overflow-hidden border border-slate-100 dark:border-white/10">
+                  <div className="rounded-xl overflow-hidden border border-slate-100 dark:border-white/20">
                     {Object.entries(product.specifications).map(([key, val], i) => (
                       <div key={key} className={`flex gap-4 p-4 text-sm ${i % 2 === 0 ? 'bg-slate-50 dark:bg-white/5' : 'bg-white dark:bg-dark-card'}`}>
                         <span className="font-semibold text-primary dark:text-white w-1/3 flex-shrink-0">{key}</span>
@@ -237,7 +257,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               {activeTab === 'features' && (
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl">
                   {product.features.map((f, i) => (
-                    <li key={i} className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-dark-card border border-slate-100 dark:border-white/10">
+                    <li key={i} className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-dark-card border border-slate-100 dark:border-white/20">
                       <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">✓</span>
                       <span className="text-sm text-slate-700 dark:text-slate-300">{f}</span>
                     </li>
@@ -250,7 +270,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <div className="text-center">
                       <div className="font-heading text-5xl font-black text-accent">{product.rating}</div>
                       <div className="flex gap-1 justify-center mt-1">
-                        {[1,2,3,4,5].map((s) => <Star key={s} size={14} className={s <= product.rating ? 'fill-accent text-accent' : 'fill-white/20 text-white/20'} />)}
+                        {[1,2,3,4,5].map((s) => <Star key={s} size={14} className={s <= product.rating ? 'fill-accent text-accent' : 'fill-white/20 text-white/60'} />)}
                       </div>
                       <p className="text-slate-400 text-xs mt-1">{product.reviews} reviews</p>
                     </div>

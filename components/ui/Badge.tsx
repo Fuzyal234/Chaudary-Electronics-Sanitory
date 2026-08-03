@@ -9,22 +9,23 @@ interface BadgeProps {
 }
 
 export default function Badge({ children, variant = 'primary', size = 'sm', pulse, className }: BadgeProps) {
-  const base = 'inline-flex items-center font-semibold rounded-full tracking-wide';
+  // Badges: soft pill, strong border, always legible.
+  const base = "inline-flex items-center rounded-full font-display font-bold uppercase tracking-[0.1em] leading-none";
 
   const variants = {
-    primary: 'bg-secondary/10 text-secondary border border-secondary/20',
-    secondary: 'bg-primary/10 text-primary border border-primary/20',
-    gold: 'bg-accent/20 text-amber-700 border border-accent/30',
-    green: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-    red: 'bg-red-50 text-red-600 border border-red-200',
-    gray: 'bg-slate-100 text-slate-600 border border-slate-200',
-    new: 'bg-accent text-white font-bold',
-    sale: 'bg-red-500 text-white font-bold',
+    primary: 'bg-secondary/10 text-secondary border border-secondary/25 dark:text-blue-200 dark:border-white/25',
+    secondary: 'bg-primary/8 text-primary border border-primary/20 dark:bg-white/8 dark:text-white dark:border-white/25',
+    gold: 'bg-accent/12 text-accent-dark border border-accent/35 dark:text-accent-light',
+    green: 'bg-stock/10 text-stock border border-stock/30',
+    red: 'bg-red-500/10 text-red-600 border border-red-500/25',
+    gray: 'bg-steel/10 text-steel border border-steel/25',
+    new: 'bg-primary text-white dark:bg-white dark:text-primary',
+    sale: 'bg-accent text-white',
   };
 
   const sizes = {
-    sm: 'text-[10px] px-2 py-0.5',
-    md: 'text-xs px-3 py-1',
+    sm: "text-[10px] px-2.5 py-1.5",
+    md: "text-[11.5px] px-3 py-2",
   };
 
   return (

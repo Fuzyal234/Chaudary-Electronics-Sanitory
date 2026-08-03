@@ -7,13 +7,14 @@ import { notFound } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ChevronRight, Globe, Calendar, Package } from 'lucide-react';
 import { getBrandBySlug } from '@/data/brands';
-import { products } from '@/data/products';
+import { useCatalog } from '@/context/CatalogContext';
 import ProductCard from '@/components/products/ProductCard';
 import QuickViewModal from '@/components/products/QuickViewModal';
 import { Product } from '@/types';
 
 export default function BrandPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
+  const { products } = useCatalog();
   const brand = getBrandBySlug(slug);
   if (!brand) notFound();
 
@@ -23,7 +24,7 @@ export default function BrandPage({ params }: { params: Promise<{ slug: string }
   return (
     <>
       <div className="bg-primary py-16">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 text-slate-400 text-sm mb-8">
             <Link href="/" className="hover:text-accent transition-colors">Home</Link>
             <ChevronRight size={14} />
@@ -48,7 +49,7 @@ export default function BrandPage({ params }: { params: Promise<{ slug: string }
         </div>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-8 py-12">
+      <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 py-12">
         {brandProducts.length > 0 ? (
           <>
             <h2 className="font-heading text-2xl font-bold text-primary dark:text-white mb-8">

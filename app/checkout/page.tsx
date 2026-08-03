@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
@@ -132,7 +132,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="max-w-screen-2xl mx-auto px-4 sm:px-5 sm:px-6 lg:px-8 py-10">
       <Link href="/products" className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-secondary">
         <ArrowLeft size={16} /> Continue shopping
       </Link>
@@ -144,7 +144,7 @@ export default function CheckoutPage() {
         {/* Details */}
         <div className="space-y-6 lg:col-span-2">
           {/* Customer */}
-          <section className="rounded-[20px] border border-slate-100 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-dark-card sm:p-8">
+          <section className="rounded-[20px] border border-slate-100 bg-white p-6 shadow-sm dark:border-white/20 dark:bg-dark-card sm:p-8">
             <h2 className="font-heading text-lg font-bold text-primary dark:text-white">Delivery Details</h2>
             <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
@@ -175,7 +175,7 @@ export default function CheckoutPage() {
           </section>
 
           {/* Payment */}
-          <section className="rounded-[20px] border border-slate-100 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-dark-card sm:p-8">
+          <section className="rounded-[20px] border border-slate-100 bg-white p-6 shadow-sm dark:border-white/20 dark:bg-dark-card sm:p-8">
             <h2 className="font-heading text-lg font-bold text-primary dark:text-white">Payment Method</h2>
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
               {PAYMENT_OPTIONS.map((opt) => {
@@ -188,7 +188,7 @@ export default function CheckoutPage() {
                     className={`flex flex-col gap-2 rounded-xl border-2 p-4 text-left transition-all ${
                       active
                         ? 'border-secondary bg-secondary/5 shadow-sm'
-                        : 'border-slate-200 dark:border-white/15 hover:border-secondary/40'
+                        : 'border-slate-200 dark:border-white/25 hover:border-secondary/40'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -210,14 +210,14 @@ export default function CheckoutPage() {
 
         {/* Summary */}
         <div className="lg:col-span-1">
-          <div className="rounded-[20px] border border-slate-100 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-dark-card lg:sticky lg:top-24">
+          <div className="rounded-[20px] border border-slate-100 bg-white p-6 shadow-sm dark:border-white/20 dark:bg-dark-card lg:sticky lg:top-24">
             <h2 className="font-heading text-lg font-bold text-primary dark:text-white">Order Summary</h2>
 
             <div className="mt-4 max-h-64 space-y-3 overflow-y-auto pr-1">
               {cart.map((item) => (
                 <div key={item.product.id} className="flex gap-3">
-                  <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-slate-50 dark:border-white/10 dark:bg-white/5">
-                    <Image src={item.product.images[0]} alt={item.product.name} fill className="object-contain p-1" />
+                  <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-slate-50 dark:border-white/20 dark:bg-white/5">
+                    <SmartImage src={item.product.images[0]} alt={item.product.name} fill className="object-contain p-1" />
                     <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
                       {item.quantity}
                     </span>
@@ -232,7 +232,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Promo */}
-            <div className="mt-5 border-t border-slate-100 pt-5 dark:border-white/10">
+            <div className="mt-5 border-t border-slate-100 pt-5 dark:border-white/20">
               {promo ? (
                 <div className="flex items-center justify-between rounded-xl bg-emerald-50 px-3 py-2.5 dark:bg-emerald-500/10">
                   <span className="flex items-center gap-2 text-sm font-semibold text-emerald-600">
@@ -262,7 +262,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Totals */}
-            <div className="mt-5 space-y-2.5 border-t border-slate-100 pt-5 text-sm dark:border-white/10">
+            <div className="mt-5 space-y-2.5 border-t border-slate-100 pt-5 text-sm dark:border-white/20">
               <div className="flex justify-between text-slate-500">
                 <span>Subtotal ({cartCount} items)</span>
                 <span className="font-medium text-primary dark:text-white">{formatPrice(subtotal)}</span>
@@ -279,7 +279,7 @@ export default function CheckoutPage() {
                   <span>− {formatPrice(discount)}</span>
                 </div>
               )}
-              <div className="flex items-center justify-between border-t border-slate-100 pt-3 dark:border-white/10">
+              <div className="flex items-center justify-between border-t border-slate-100 pt-3 dark:border-white/20">
                 <span className="font-bold text-primary dark:text-white">Total</span>
                 <span className="font-heading text-xl font-black text-primary dark:text-white">{formatPrice(total)}</span>
               </div>

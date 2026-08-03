@@ -16,22 +16,23 @@ interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = 'primary', size = 'md', loading, icon, iconPosition = 'left', fullWidth, glow, className, children, disabled, ...props }, ref) => {
-    const base = 'inline-flex items-center justify-center gap-2 font-semibold transition-all duration-300 cursor-pointer select-none rounded-[12px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed relative overflow-hidden';
+    // Squared, flat, decisive — a counter button, not a pillow.
+    const base = 'inline-flex items-center justify-center gap-2 font-display font-semibold tracking-[-0.01em] transition-colors duration-200 cursor-pointer select-none rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed relative';
 
     const variants = {
-      primary: 'bg-secondary text-white hover:bg-secondary-dark focus-visible:ring-secondary shadow-lg hover:shadow-xl hover:shadow-secondary/30',
-      secondary: 'bg-primary text-white hover:bg-primary-light focus-visible:ring-primary shadow-lg hover:shadow-xl',
-      gold: 'bg-accent text-white hover:bg-accent-dark focus-visible:ring-accent shadow-md hover:shadow-lg font-bold',
-      outline: 'border-2 border-secondary text-secondary hover:bg-secondary hover:text-white focus-visible:ring-secondary bg-transparent',
-      ghost: 'text-primary hover:bg-primary/10 focus-visible:ring-primary bg-transparent',
-      danger: 'bg-red-500 text-white hover:bg-red-600 focus-visible:ring-red-500 shadow-lg',
+      primary: "bg-secondary text-white hover:bg-secondary-dark shadow-[0_10px_24px_-12px_rgba(30,90,200,0.95)]",
+      secondary: "bg-primary text-white hover:bg-primary-light shadow-[0_10px_24px_-12px_rgba(13,26,45,0.9)]",
+      gold: "bg-accent text-white hover:bg-accent-dark shadow-[0_10px_24px_-12px_rgba(14,156,156,0.95)]",
+      outline: "border-2 border-[var(--hair-strong)] text-primary dark:text-white hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-white dark:hover:text-primary bg-transparent",
+      ghost: "text-primary dark:text-slate-200 hover:bg-primary/8 dark:hover:bg-white/10 bg-transparent",
+      danger: 'bg-red-600 text-white hover:bg-red-700',
     };
 
     const sizes = {
-      sm: 'text-xs px-3 py-1.5 h-8',
-      md: 'text-sm px-5 py-2.5 h-10',
-      lg: 'text-base px-7 py-3 h-12',
-      xl: 'text-lg px-9 py-4 h-14',
+      sm: 'text-[13px] px-3.5 h-9',
+      md: 'text-[14px] px-5 h-11',
+      lg: 'text-[15px] px-7 h-12',
+      xl: 'text-[16px] px-9 h-14',
     };
 
     return (
@@ -51,9 +52,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         {...props}
       >
-        {/* Shimmer effect */}
-        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
-
         {loading ? (
           <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />

@@ -2,17 +2,19 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Send, ArrowRight } from 'lucide-react';
+import { Phone, Mail, MapPin, ArrowRight } from 'lucide-react';
 import { categories } from '@/data/categories';
+import { STORE } from '@/lib/store';
 import { useState } from 'react';
+import Logo from '@/components/layout/Logo';
 
 const quickLinks = [
   { label: 'Home', href: '/' },
   { label: 'Products', href: '/products' },
   { label: 'Categories', href: '/categories' },
   { label: 'Brands', href: '/brands' },
-  { label: 'Special Offers', href: '/offers' },
-  { label: 'About Us', href: '/about' },
+  { label: 'Special offers', href: '/offers' },
+  { label: 'About us', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -31,7 +33,7 @@ const SvgInstagram = () => (
 const SvgYoutube = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
     <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.95-1.96 29 29 0 0 0 .46-5.25 29 29 0 0 0-.47-5.43z" />
-    <polygon fill="white" points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
+    <polygon fill="currentColor" className="text-primary" points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
   </svg>
 );
 const SvgTwitter = () => (
@@ -41,10 +43,10 @@ const SvgTwitter = () => (
 );
 
 const socialLinks = [
-  { Icon: SvgFacebook, href: '#', label: 'Facebook', color: 'hover:text-blue-500' },
-  { Icon: SvgInstagram, href: '#', label: 'Instagram', color: 'hover:text-pink-500' },
-  { Icon: SvgYoutube, href: '#', label: 'YouTube', color: 'hover:text-red-500' },
-  { Icon: SvgTwitter, href: '#', label: 'Twitter / X', color: 'hover:text-sky-500' },
+  { Icon: SvgFacebook, href: '#', label: 'Facebook' },
+  { Icon: SvgInstagram, href: '#', label: 'Instagram' },
+  { Icon: SvgYoutube, href: '#', label: 'YouTube' },
+  { Icon: SvgTwitter, href: '#', label: 'Twitter / X' },
 ];
 
 export default function Footer() {
@@ -57,53 +59,46 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-primary dark:bg-primary-dark text-white relative overflow-hidden">
-      {/* Decorative gradient */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-      </div>
+    <footer className="relative field-dark text-white overflow-hidden">
+      <div className="absolute inset-0 dotfield pointer-events-none opacity-30" />
 
-      {/* Newsletter Band */}
-      <div className="relative border-b border-white/10">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8 py-12">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+      {/* Stock list band */}
+      <div className="relative border-b border-white/20">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-10 py-10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <h3 className="font-heading text-2xl lg:text-3xl font-bold text-white">
-                Stay Updated with Latest Offers
+              <h3 className="font-display font-bold text-[20px] lg:text-[24px] text-white tracking-tight">
+                New stock, price changes, closing days
               </h3>
-              <p className="mt-2 text-slate-400 text-sm">
-                Subscribe for exclusive deals, new arrivals and construction tips
-              </p>
+              <p className="mt-2 text-[13.5px] text-white/70">One email a month. Nothing else.</p>
             </div>
-            <form onSubmit={handleSubscribe} className="flex w-full md:w-auto gap-3 min-w-0 md:min-w-[400px]">
+            <form onSubmit={handleSubscribe} className="flex w-full md:w-auto md:min-w-[400px]">
               {subscribed ? (
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex items-center gap-2 text-emerald-400 font-medium"
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-[14px] font-display font-semibold text-accent-light"
                 >
-                  <span className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs">✓</span>
-                  Thank you for subscribing!
-                </motion.div>
+                  Added — we&apos;ll write when there&apos;s something worth saying.
+                </motion.p>
               ) : (
                 <>
+                  <label htmlFor="footer-email" className="sr-only">Email address</label>
                   <input
+                    id="footer-email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email address"
+                    placeholder="you@example.com"
                     required
-                    className="flex-1 min-w-0 px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-slate-400 text-sm focus:outline-none focus:border-secondary focus:bg-white/15 transition-all"
+                    className="flex-1 min-w-0 px-4 h-12 rounded-l-xl bg-white/[0.07] border border-white/25 border-r-0 text-white placeholder:text-white/65 text-[14px] focus:outline-none focus:border-accent transition-colors"
                   />
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
+                  <button
                     type="submit"
-                    className="flex items-center gap-2 px-5 py-3 bg-accent text-white font-semibold rounded-xl hover:bg-accent-dark transition-colors text-sm flex-shrink-0"
+                    className="px-6 h-12 rounded-r-xl bg-secondary text-white text-[14px] font-display font-semibold hover:bg-secondary-light transition-colors flex-shrink-0"
                   >
-                    <Send size={16} /> Subscribe
-                  </motion.button>
+                    Sign up
+                  </button>
                 </>
               )}
             </form>
@@ -111,130 +106,118 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Main Footer */}
-      <div className="relative max-w-screen-2xl mx-auto px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+      {/* Directory */}
+      <div className="relative max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-10 py-14 lg:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-14">
 
-          {/* Brand Info */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-secondary to-secondary-dark flex items-center justify-center shadow-lg">
-                <span className="text-accent font-black text-2xl">C</span>
-              </div>
-              <div>
-                <div className="font-heading font-bold text-white text-lg leading-tight">CHAUDHRY</div>
-                <div className="text-[11px] text-accent tracking-widest uppercase font-medium">
-                  Sanitary · Electric · Hardware
-                </div>
-              </div>
-            </Link>
-            <p className="text-slate-400 text-sm leading-relaxed mb-6">
-              Pakistan&apos;s trusted destination for premium sanitary ware, electrical supplies, hardware and construction materials. Quality products for every project.
+          <div>
+            <Logo tone="dark" className="mb-6" />
+            <p className="text-[14px] text-white/70 leading-relaxed mb-7 max-w-xs">
+              A Lahore trade counter since 2003. Sanitary ware, electrical supply, hardware and
+              construction materials — authorized stock, priced for the trade.
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               {socialLinks.map((s) => (
-                <motion.a
+                <a
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
-                  whileHover={{ scale: 1.15, y: -2 }}
-                  whileTap={{ scale: 0.9 }}
-                  className={`w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-slate-400 transition-all border border-white/10 hover:bg-white/20 hover:border-white/20 ${s.color}`}
+                  className="w-10 h-10 rounded-xl border border-white/25 flex items-center justify-center text-white/75 hover:text-primary hover:bg-accent hover:border-accent transition-colors"
                 >
                   <s.Icon />
-                </motion.a>
+                </a>
               ))}
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-white mb-5 text-sm uppercase tracking-widest">Quick Links</h4>
-            <ul className="space-y-2.5">
+            <h4 className="t-eyebrow text-accent-light mb-5">Pages</h4>
+            <ul className="space-y-0">
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="flex items-center gap-2 text-slate-400 hover:text-accent text-sm transition-colors group"
+                    className="group flex items-center justify-between py-2.5 border-b border-white/20 text-[14px] text-white/75 hover:text-white transition-colors"
                   >
-                    <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                     {link.label}
+                    <ArrowRight size={12} className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 text-accent transition-all" />
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Categories */}
           <div>
-            <h4 className="font-bold text-white mb-5 text-sm uppercase tracking-widest">Categories</h4>
-            <ul className="space-y-2.5">
+            <h4 className="t-eyebrow text-accent-light mb-5">Departments</h4>
+            <ul className="space-y-0">
               {categories.slice(0, 8).map((cat) => (
                 <li key={cat.id}>
                   <Link
                     href={`/categories/${cat.slug}`}
-                    className="flex items-center gap-2 text-slate-400 hover:text-accent text-sm transition-colors group"
+                    className="group flex items-center justify-between py-2.5 border-b border-white/20 text-[14px] text-white/75 hover:text-white transition-colors"
                   >
-                    <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                     {cat.name}
+                    <span className="text-[12.5px] text-white/60 group-hover:text-accent-light transition-colors">{cat.productCount}</span>
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
-            <h4 className="font-bold text-white mb-5 text-sm uppercase tracking-widest">Contact Us</h4>
-            <ul className="space-y-4">
+            <h4 className="t-eyebrow text-accent-light mb-5">The counter</h4>
+            <ul className="space-y-4 mb-7">
               <li className="flex items-start gap-3">
-                <MapPin size={16} className="text-accent flex-shrink-0 mt-0.5" />
-                <span className="text-slate-400 text-sm leading-relaxed">
-                  Main Bazar, Model Town,<br />Lahore, Punjab, Pakistan
+                <MapPin size={15} className="text-accent flex-shrink-0 mt-0.5" />
+                <span className="text-[14px] text-white/75 leading-relaxed">
+                  {STORE.address},<br />{STORE.city}
                 </span>
               </li>
+              {STORE.phones.map((p) => (
+                <li key={p} className="flex items-center gap-3">
+                  <Phone size={15} className="text-accent flex-shrink-0" />
+                  <a href={`tel:${p.replace(/\s/g, '')}`} className="t-figure text-[13px] text-white/75 hover:text-white transition-colors">
+                    {p}
+                  </a>
+                </li>
+              ))}
               <li className="flex items-center gap-3">
-                <Phone size={16} className="text-accent flex-shrink-0" />
-                <a href="tel:+923001234567" className="text-slate-400 hover:text-accent text-sm transition-colors">
-                  +92 300 1234567
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone size={16} className="text-accent flex-shrink-0" />
-                <a href="tel:+924235601234" className="text-slate-400 hover:text-accent text-sm transition-colors">
-                  +92 42 35601234
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail size={16} className="text-accent flex-shrink-0" />
-                <a href="mailto:info@chaudhry.pk" className="text-slate-400 hover:text-accent text-sm transition-colors">
-                  info@chaudhry.pk
+                <Mail size={15} className="text-accent flex-shrink-0" />
+                <a href={`mailto:${STORE.email}`} className="text-[14px] text-white/75 hover:text-white transition-colors">
+                  {STORE.email}
                 </a>
               </li>
             </ul>
 
-            <div className="mt-6 p-4 rounded-xl bg-white/5 border border-white/10">
-              <p className="text-xs font-bold text-white uppercase tracking-wider mb-2">Business Hours</p>
-              <div className="space-y-1 text-xs text-slate-400">
-                <div className="flex justify-between"><span>Mon – Fri</span><span className="text-white">9:00 AM – 8:00 PM</span></div>
-                <div className="flex justify-between"><span>Saturday</span><span className="text-white">9:00 AM – 6:00 PM</span></div>
-                <div className="flex justify-between"><span>Sunday</span><span className="text-red-400">Closed</span></div>
+            <div className="rounded-xl border border-white/22 bg-white/[0.04]">
+              <p className="t-eyebrow text-white/70 px-4 py-3 border-b border-white/22">Opening hours</p>
+              <div className="px-4 py-1">
+                {[
+                  ['Mon – Fri', '9:00 – 20:00'],
+                  ['Saturday', '9:00 – 18:00'],
+                  ['Sunday', 'Closed'],
+                ].map(([day, time]) => (
+                  <div key={day} className="flex justify-between py-2 border-b border-white/20 last:border-0">
+                    <span className="text-[13px] text-white/70">{day}</span>
+                    <span className={`text-[13px] font-display font-semibold ${time === "Closed" ? "text-white/65" : "text-white"}`}>{time}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="relative border-t border-white/10">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <p>© {new Date().getFullYear()} Chaudhry Sanitary, Electric & Hardware. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link href="#" className="hover:text-accent transition-colors">Privacy Policy</Link>
-            <span>·</span>
-            <Link href="#" className="hover:text-accent transition-colors">Terms of Service</Link>
-            <span>·</span>
-            <Link href="#" className="hover:text-accent transition-colors">Sitemap</Link>
+      {/* Colophon */}
+      <div className="relative border-t border-white/20">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-10 py-5 pb-6 sm:pr-28 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[13px] text-white/70 text-center sm:text-left">
+            © {new Date().getFullYear()} {STORE.name} · NTN {STORE.ntn}
+          </p>
+          <div className="flex items-center gap-5">
+            <Link href="#" className="text-[13px] text-white/70 hover:text-accent-light transition-colors">Privacy</Link>
+            <Link href="#" className="text-[13px] text-white/70 hover:text-accent-light transition-colors">Terms</Link>
+            <Link href="#" className="text-[13px] text-white/70 hover:text-accent-light transition-colors">Sitemap</Link>
           </div>
         </div>
       </div>
