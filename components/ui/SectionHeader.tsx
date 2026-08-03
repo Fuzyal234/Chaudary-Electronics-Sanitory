@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface SectionHeaderProps {
+  /** Kept for call-site compatibility; no longer rendered. */
+  index?: string;
   badge?: string;
   title: string;
   highlight?: string;
@@ -15,7 +17,15 @@ interface SectionHeaderProps {
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-export default function SectionHeader({ badge, title, highlight, subtitle, align = 'center', dark, className }: SectionHeaderProps) {
+export default function SectionHeader({
+  badge,
+  title,
+  highlight,
+  subtitle,
+  align = 'center',
+  dark,
+  className,
+}: SectionHeaderProps) {
   const alignClass = {
     left: 'text-left items-start',
     center: 'text-center items-center',
@@ -24,61 +34,52 @@ export default function SectionHeader({ badge, title, highlight, subtitle, align
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.55, ease }}
-      className={cn('flex flex-col gap-3', alignClass[align], className)}
+      transition={{ duration: 0.5, ease }}
+      className={cn('flex flex-col', alignClass[align], className)}
     >
       {badge && (
-        <motion.span
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.1, ease }}
-          className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase text-secondary"
+        <span
+          className={cn(
+            't-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full mb-5',
+            dark
+              ? 'bg-white/8 text-accent-light border border-white/20'
+              : 'bg-accent/8 text-accent border border-accent/15'
+          )}
         >
-          <span className="h-px w-8 bg-accent" />
+          <span className="w-1.5 h-1.5 rounded-full bg-current" />
           {badge}
-          <span className="h-px w-8 bg-accent" />
-        </motion.span>
+        </span>
       )}
 
-      <h2 className={cn(
-        'text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight',
-        dark ? 'text-white' : 'text-primary'
-      )}>
-        {title}{' '}
+      <h2
+        className={cn(
+          't-plate text-[2rem] sm:text-[2.4rem] lg:text-[2.9rem] max-w-3xl',
+          dark ? 'text-white' : 'text-primary dark:text-white'
+        )}
+      >
+        {title}
         {highlight && (
-          <span className="gradient-text">{highlight}</span>
+          <>
+            {' '}
+            <span className="gradient-text">{highlight}</span>
+          </>
         )}
       </h2>
 
       {subtitle && (
-        <p className={cn(
-          'text-base sm:text-lg max-w-2xl leading-relaxed',
-          dark ? 'text-slate-300' : 'text-slate-500',
-          align === 'center' && 'mx-auto'
-        )}>
+        <p
+          className={cn(
+            'mt-4 text-[15px] max-w-xl leading-relaxed',
+            dark ? 'text-white/75' : 'text-steel dark:text-slate-400',
+            align === 'center' && 'mx-auto'
+          )}
+        >
           {subtitle}
         </p>
       )}
-
-      <motion.div
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.25, ease }}
-        className={cn(
-          'flex gap-1 mt-1 origin-left',
-          align === 'center' && 'justify-center origin-center',
-          align === 'right' && 'justify-end origin-right'
-        )}
-      >
-        <span className="h-1 w-12 rounded-full bg-secondary" />
-        <span className="h-1 w-4 rounded-full bg-accent" />
-        <span className="h-1 w-2 rounded-full bg-secondary/25" />
-      </motion.div>
     </motion.div>
   );
 }

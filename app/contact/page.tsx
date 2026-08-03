@@ -24,12 +24,12 @@ export default function ContactPage() {
       <div className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-light to-secondary" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-        <div className="relative max-w-screen-2xl mx-auto px-6 lg:px-8 text-center">
+        <div className="relative max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 text-center">
           <SectionHeader badge="Get in Touch" title="Contact" highlight="Us" subtitle="We're here to help — reach out anytime" dark />
         </div>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
+      <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact Info */}
           <div className="space-y-6">
@@ -57,7 +57,7 @@ export default function ContactPage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
                 whileHover={{ x: 4 }}
-                className="flex items-start gap-4 p-5 rounded-xl bg-white dark:bg-dark-card border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-lg hover:border-secondary/30 transition-all group"
+                className="flex items-start gap-4 p-5 rounded-xl bg-white dark:bg-dark-card border border-slate-100 dark:border-white/20 shadow-sm hover:shadow-lg hover:border-secondary/30 transition-all group"
               >
                 <div className="w-11 h-11 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-secondary group-hover:text-white transition-all">
                   <item.icon size={20} className="text-secondary group-hover:text-white transition-colors" />
@@ -79,7 +79,7 @@ export default function ContactPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-white dark:bg-dark-card rounded-[24px] p-8 lg:p-10 border border-slate-100 dark:border-white/10 shadow-xl"
+              className="bg-white dark:bg-dark-card rounded-[24px] p-8 lg:p-10 border border-slate-100 dark:border-white/20 shadow-xl"
             >
               {submitted ? (
                 <motion.div

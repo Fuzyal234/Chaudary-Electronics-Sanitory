@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingCart, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useApp } from '@/context/AppContext';
@@ -41,7 +41,7 @@ export default function CartSidebar() {
             className="fixed right-0 top-0 bottom-0 w-full sm:w-[420px] bg-white dark:bg-dark-card z-[100] shadow-2xl flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-white/10">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-white/20">
               <div className="flex items-center gap-3">
                 <ShoppingCart size={22} className="text-secondary" />
                 <h2 className="font-heading font-bold text-primary dark:text-white text-lg">
@@ -84,10 +84,10 @@ export default function CartSidebar() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
-                      className="flex gap-4 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10"
+                      className="flex gap-4 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/20"
                     >
-                      <div className="w-16 h-16 rounded-xl bg-white dark:bg-white/10 overflow-hidden flex-shrink-0 relative border border-slate-100 dark:border-white/10">
-                        <Image src={item.product.images[0]} alt={item.product.name} fill className="object-contain p-1" />
+                      <div className="w-16 h-16 rounded-xl bg-white dark:bg-white/10 overflow-hidden flex-shrink-0 relative border border-slate-100 dark:border-white/20">
+                        <SmartImage src={item.product.images[0]} alt={item.product.name} fill className="object-contain p-1" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-primary dark:text-white text-sm line-clamp-2 leading-snug">{item.product.name}</p>
@@ -116,7 +116,7 @@ export default function CartSidebar() {
 
             {/* Footer */}
             {cart.length > 0 && (
-              <div className="px-6 py-5 border-t border-slate-100 dark:border-white/10 space-y-4">
+              <div className="px-6 py-5 border-t border-slate-100 dark:border-white/20 space-y-4">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm text-slate-500">
                     <span>Subtotal ({cartCount} items)</span>
@@ -126,7 +126,7 @@ export default function CartSidebar() {
                     <span>Delivery</span>
                     <span className="text-emerald-500 font-medium">{cartTotal >= 5000 ? 'FREE' : formatPrice(250)}</span>
                   </div>
-                  <div className="flex justify-between font-bold text-primary dark:text-white pt-2 border-t border-slate-100 dark:border-white/10">
+                  <div className="flex justify-between font-bold text-primary dark:text-white pt-2 border-t border-slate-100 dark:border-white/20">
                     <span>Total</span>
                     <span>{formatPrice(cartTotal + (cartTotal >= 5000 ? 0 : 250))}</span>
                   </div>

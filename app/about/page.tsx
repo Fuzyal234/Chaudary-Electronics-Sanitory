@@ -26,7 +26,7 @@ export default function AboutPage() {
     <div>
       {/* Hero */}
       <div className="relative py-24 overflow-hidden bg-primary">
-        <div className="relative max-w-screen-2xl mx-auto px-6 lg:px-8 text-center">
+        <div className="relative max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
             <span className="inline-flex items-center gap-2 text-accent text-sm font-bold tracking-widest uppercase mb-6">
               <span className="h-px w-8 bg-accent" /> Our Story <span className="h-px w-8 bg-accent" />
@@ -43,8 +43,8 @@ export default function AboutPage() {
       </div>
 
       {/* Mission & Vision */}
-      <section className="py-20 lg:py-28 bg-bg dark:bg-dark-bg">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8">
+      <section className="py-14 sm:py-20 lg:py-28 bg-bg dark:bg-dark-bg">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {[
               {
@@ -68,7 +68,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className={`relative p-8 lg:p-10 rounded-[24px] bg-gradient-to-br ${item.color} border border-slate-100 dark:border-white/10`}
+                className={`relative p-8 lg:p-10 rounded-[24px] bg-gradient-to-br ${item.color} border border-slate-100 dark:border-white/20`}
               >
                 <div className="w-16 h-16 rounded-2xl bg-white dark:bg-dark-card flex items-center justify-center mb-6 shadow-lg">
                   <item.icon size={30} className={item.iconColor} />
@@ -82,8 +82,8 @@ export default function AboutPage() {
       </section>
 
       {/* Timeline */}
-      <section className="py-20 lg:py-28 bg-slate-50 dark:bg-dark-surface">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8">
+      <section className="py-14 sm:py-20 lg:py-28 bg-slate-50 dark:bg-dark-surface">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
           <SectionHeader badge="Our Journey" title="Two Decades of" highlight="Excellence" className="mb-16" />
           <div className="relative">
             <div className="absolute left-1/2 -translate-x-px h-full w-0.5 bg-gradient-to-b from-secondary to-accent hidden lg:block" />
@@ -98,7 +98,7 @@ export default function AboutPage() {
                   className={`relative lg:flex lg:items-center ${i % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} mb-10`}
                 >
                   <div className={`lg:w-1/2 ${i % 2 === 0 ? 'lg:pr-12 lg:text-right' : 'lg:pl-12'}`}>
-                    <div className="bg-white dark:bg-dark-card rounded-xl p-6 shadow-sm border border-slate-100 dark:border-white/10 hover:shadow-md transition-shadow">
+                    <div className="bg-white dark:bg-dark-card rounded-xl p-6 shadow-sm border border-slate-100 dark:border-white/20 hover:shadow-md transition-shadow">
                       <span className="inline-block px-3 py-1 bg-secondary/10 text-secondary text-sm font-bold rounded-lg mb-3">{item.year}</span>
                       <h3 className="font-bold text-primary dark:text-white text-xl mb-2">{item.title}</h3>
                       <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{item.desc}</p>
@@ -115,8 +115,8 @@ export default function AboutPage() {
       </section>
 
       {/* Team */}
-      <section className="py-20 lg:py-28 bg-bg dark:bg-dark-bg">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8">
+      <section className="py-14 sm:py-20 lg:py-28 bg-bg dark:bg-dark-bg">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
           <SectionHeader badge="The Team" title="Meet Our" highlight="Experts" subtitle="Experienced professionals committed to serving you" className="mb-14" />
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {team.map((member, i) => (

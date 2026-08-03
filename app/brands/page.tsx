@@ -17,7 +17,7 @@ export default function BrandsPage() {
   return (
     <div>
       <div className="bg-primary py-16">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
           <SectionHeader
             badge="Our Partners"
             title="Premium"
@@ -28,7 +28,7 @@ export default function BrandsPage() {
         </div>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-8 py-12">
+      <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 py-12">
         {/* Filter */}
         <div className="flex flex-wrap gap-2 mb-10">
           {allCountries.map((country) => (
@@ -54,7 +54,7 @@ export default function BrandsPage() {
                 <motion.div
                   whileHover={{ y: -6 }}
                   transition={{ duration: 0.3 }}
-                  className="h-full flex flex-col p-6 rounded-xl bg-white dark:bg-dark-card border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-lg transition-shadow duration-200"
+                  className="h-full flex flex-col p-6 rounded-xl bg-white dark:bg-dark-card border border-slate-100 dark:border-white/20 shadow-sm hover:shadow-lg transition-shadow duration-200"
                 >
                   {/* Logo */}
                   <div className="relative h-20 mb-5 rounded-xl bg-slate-50 dark:bg-white/5 overflow-hidden">
@@ -69,7 +69,7 @@ export default function BrandsPage() {
                     {brand.description}
                   </p>
 
-                  <div className="grid grid-cols-3 gap-2 mb-4 pt-4 border-t border-slate-100 dark:border-white/10 text-center">
+                  <div className="grid grid-cols-3 gap-2 mb-4 pt-4 border-t border-slate-100 dark:border-white/20 text-center">
                     <div>
                       <Globe size={14} className="text-slate-400 mx-auto mb-1" />
                       <p className="text-xs text-slate-400">{brand.country}</p>

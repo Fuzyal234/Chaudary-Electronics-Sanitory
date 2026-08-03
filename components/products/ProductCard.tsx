@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import { ShoppingCart, Heart } from 'lucide-react';
 import { Product } from '@/types';
 import { useApp } from '@/context/AppContext';
@@ -14,14 +14,20 @@ interface ProductCardProps {
   onQuickView?: (product: Product) => void;
 }
 
+function stockLine(stock: number) {
+  if (stock === 0) return { text: 'Out of stock', tone: 'text-steel' };
+  if (stock <= 5) return { text: `Only ${stock} left`, tone: 'text-amber-600' };
+  return { text: 'In stock', tone: 'text-stock' };
+}
+
 export default function ProductCard({ product, variant = 'default' }: ProductCardProps) {
   const router = useRouter();
   const { addToCart, toggleWishlist, isInWishlist } = useApp();
   const [imageLoaded, setImageLoaded] = useState(false);
   const inWishlist = isInWishlist(product.id);
 
-  const discountLabel = product.discount ? `-${product.discount}%` : null;
   const openDetail = () => router.push(`/products/${product.id}`);
+  const stock = stockLine(product.stock);
 
   if (variant === 'list') {
     return (
@@ -30,10 +36,10 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
         role="link"
         tabIndex={0}
         onKeyDown={(e) => { if (e.key === 'Enter') openDetail(); }}
-        className="cursor-pointer flex gap-4 p-4 bg-white dark:bg-dark-card rounded-xl border border-slate-100 dark:border-white/10 hover:border-slate-200 dark:hover:border-white/20 hover:shadow-md transition-all duration-200 group"
+        className="group cursor-pointer card card-hover flex gap-4 p-4"
       >
-        <div className="relative w-28 h-28 rounded-lg overflow-hidden flex-shrink-0 bg-slate-50 dark:bg-white/5">
-          <Image
+        <div className="relative w-28 h-28 rounded-xl overflow-hidden flex-shrink-0 porcelain product-img-wrapper">
+          <SmartImage
             src={product.images[0]}
             alt={product.name}
             fill
@@ -44,25 +50,25 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
 
         <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
           <div>
-            <p className="text-[11px] font-semibold text-secondary uppercase tracking-wider mb-0.5">{product.brand}</p>
-            <h3 className="font-medium text-slate-800 dark:text-white text-sm leading-snug line-clamp-2 group-hover:text-secondary transition-colors">
+            <span className="t-eyebrow text-secondary dark:text-blue-300">{product.brand}</span>
+            <h3 className="mt-1.5 font-display font-semibold text-primary dark:text-white text-[15px] leading-snug line-clamp-2 group-hover:text-secondary dark:group-hover:text-blue-300 transition-colors">
               {product.name}
             </h3>
           </div>
 
-          <div className="flex items-center justify-between mt-3">
-            <div className="flex items-baseline gap-2">
-              <span className="font-bold text-slate-800 dark:text-white">{formatPrice(product.price)}</span>
+          <div className="flex items-end justify-between mt-3">
+            <div>
+              <div className="t-figure text-[17px] text-primary dark:text-white">{formatPrice(product.price)}</div>
               {product.oldPrice && (
-                <span className="text-xs text-slate-400 line-through">{formatPrice(product.oldPrice)}</span>
+                <div className="text-[12px] text-steel line-through mt-0.5">{formatPrice(product.oldPrice)}</div>
               )}
             </div>
             <button
               onClick={(e) => { e.stopPropagation(); addToCart(product); }}
               disabled={product.stock === 0}
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-secondary text-white text-xs font-semibold rounded-lg hover:bg-secondary-dark transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-secondary text-white text-[13px] font-display font-semibold hover:bg-secondary-dark transition-colors disabled:opacity-40"
             >
-              <ShoppingCart size={12} /> Add
+              <ShoppingCart size={13} /> Add
             </button>
           </div>
         </div>
@@ -76,60 +82,78 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
       role="link"
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter') openDetail(); }}
-      className="cursor-pointer group relative flex flex-col bg-white dark:bg-dark-card rounded-xl border border-slate-100 dark:border-white/10 overflow-hidden hover:border-slate-200 dark:hover:border-white/20 hover:shadow-md transition-all duration-200"
+      className="group cursor-pointer card card-hover flex flex-col overflow-hidden"
     >
-      {/* Discount badge */}
-      {discountLabel && (
-        <span className="absolute top-2.5 left-2.5 z-10 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md pointer-events-none">
-          {discountLabel}
-        </span>
-      )}
-
-      {/* Wishlist */}
-      <button
-        onClick={(e) => { e.stopPropagation(); toggleWishlist(product); }}
-        className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
-          inWishlist
-            ? 'text-red-500 bg-red-50 dark:bg-red-500/10'
-            : 'text-slate-300 hover:text-red-400 bg-white/80 dark:bg-primary/60'
-        }`}
-      >
-        <Heart size={13} fill={inWishlist ? 'currentColor' : 'none'} />
-      </button>
-
-      {/* Image */}
-      <div className="relative aspect-square bg-slate-50 dark:bg-white/[0.03]">
-        {!imageLoaded && <div className="absolute inset-0 bg-slate-100 dark:bg-white/5 animate-pulse" />}
-        <Image
+      {/* Photo */}
+      <div className="relative aspect-square porcelain product-img-wrapper">
+        {!imageLoaded && <div className="absolute inset-0 skeleton rounded-none" />}
+        <SmartImage
           src={product.images[0]}
           alt={product.name}
           fill
-          className={`object-contain p-5 transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`object-contain p-6 transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setImageLoaded(true)}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
+
+        {product.discount ? (
+          <span className="absolute top-3 left-3 t-eyebrow text-[10px] px-2.5 py-1.5 rounded-full bg-accent text-white shadow-sm">
+            −{product.discount}%
+          </span>
+        ) : product.isNew ? (
+          <span className="absolute top-3 left-3 t-eyebrow text-[10px] px-2.5 py-1.5 rounded-full bg-secondary text-white shadow-sm">
+            New
+          </span>
+        ) : null}
+
+        <button
+          onClick={(e) => { e.stopPropagation(); toggleWishlist(product); }}
+          aria-label={inWishlist ? `Remove ${product.name} from saved items` : `Save ${product.name}`}
+          className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm transition-colors ${
+            inWishlist
+              ? 'bg-white text-rose-500 shadow-sm'
+              : 'bg-white/80 text-steel hover:text-rose-500 dark:bg-primary/70 dark:text-slate-300'
+          }`}
+        >
+          <Heart size={14} fill={inWishlist ? 'currentColor' : 'none'} />
+        </button>
       </div>
 
-      {/* Info */}
-      <div className="p-3.5">
-        <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">{product.brand}</p>
-        <h3 className="text-sm font-medium text-slate-800 dark:text-white leading-snug line-clamp-2 group-hover:text-secondary transition-colors">
+      {/* Detail */}
+      <div className="flex-1 flex flex-col p-4">
+        <div className="flex items-center justify-between gap-2">
+          {/* A card is ~165px wide in the two-up phone grid — not enough for a
+              brand and a part number without both being cut off. The brand wins
+              there; the part number returns as soon as there is room. */}
+          <span className="t-eyebrow text-secondary dark:text-blue-300 truncate">{product.brand}</span>
+          <span className="t-code text-steel truncate hidden sm:block">{product.sku}</span>
+        </div>
+
+        <h3 className="mt-2 font-display font-semibold text-[14px] leading-snug text-primary dark:text-white line-clamp-2 group-hover:text-secondary dark:group-hover:text-blue-300 transition-colors">
           {product.name}
         </h3>
 
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100 dark:border-white/8">
-          <div>
-            <div className="font-bold text-slate-800 dark:text-white text-sm">{formatPrice(product.price)}</div>
+        <span className={`mt-2 text-[12px] font-medium ${stock.tone}`}>{stock.text}</span>
+
+        <div className="mt-4 pt-3.5 border-t border-[var(--hair)] flex items-end justify-between gap-2">
+          <div className="min-w-0">
+            <div className="t-figure text-[17px] text-primary dark:text-white truncate">
+              {formatPrice(product.price)}
+            </div>
             {product.oldPrice && (
-              <div className="text-[11px] text-slate-400 line-through">{formatPrice(product.oldPrice)}</div>
+              <div className="text-[12px] text-steel line-through truncate">
+                {formatPrice(product.oldPrice)}
+              </div>
             )}
           </div>
           <button
             onClick={(e) => { e.stopPropagation(); addToCart(product); }}
             disabled={product.stock === 0}
-            className="flex items-center gap-1 px-3 py-1.5 bg-secondary text-white text-xs font-semibold rounded-lg hover:bg-secondary-dark transition-colors disabled:opacity-40"
+            aria-label={`Add ${product.name} to cart`}
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-lg bg-secondary text-white text-[13px] font-display font-semibold hover:bg-secondary-dark transition-colors disabled:opacity-40 flex-shrink-0"
           >
-            <ShoppingCart size={11} /> Add
+            <ShoppingCart size={13} />
+            <span className="hidden sm:inline">Add</span>
           </button>
         </div>
       </div>

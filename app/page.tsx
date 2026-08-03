@@ -1,5 +1,6 @@
 import HeroSection from '@/components/home/HeroSection';
 import FeaturedCategories from '@/components/home/FeaturedCategories';
+import CatalogShowcase from '@/components/home/CatalogShowcase';
 import BestSellers from '@/components/home/BestSellers';
 import StoreStats from '@/components/home/StoreStats';
 import WhyChooseUs from '@/components/home/WhyChooseUs';
@@ -10,6 +11,7 @@ export default function HomePage() {
     <>
       <HeroSection />
       <FeaturedCategories />
+      <CatalogShowcase />
       <BestSellers />
       <StoreStats />
       <WhyChooseUs />

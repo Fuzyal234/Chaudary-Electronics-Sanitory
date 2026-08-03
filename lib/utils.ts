@@ -5,6 +5,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Readable message for a thrown value. Supabase/PostgREST errors are plain
+ * objects (not `Error`), so an `instanceof Error` check alone drops the real
+ * reason — including RLS denials and "no rows matched" on update.
+ */
+export function errorMessage(e: unknown, fallback: string): string {
+  if (e instanceof Error) return e.message;
+  if (e && typeof e === 'object') {
+    const { message, details, hint, code } = e as Record<string, unknown>;
+    const parts = [message, details, hint].filter((v): v is string => typeof v === 'string' && v.length > 0);
+    if (parts.length > 0) {
+      return typeof code === 'string' ? `${parts.join(' — ')} (${code})` : parts.join(' — ');
+    }
+  }
+  return fallback;
+}
+
 export function formatPrice(price: number): string {
   return new Intl.NumberFormat('en-PK', {
     style: 'currency',

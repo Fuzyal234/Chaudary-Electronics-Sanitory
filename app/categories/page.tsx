@@ -31,7 +31,7 @@ export default function CategoriesPage() {
   return (
     <div>
       <div className="bg-primary py-16">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
           <SectionHeader
             badge="Browse All"
             title="Shop by"
@@ -42,7 +42,7 @@ export default function CategoriesPage() {
         </div>
       </div>
 
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-8 py-16">
+      <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 lg:gap-6">
           {categories.map((cat, i) => (
             <motion.div
@@ -55,7 +55,7 @@ export default function CategoriesPage() {
                 <motion.div
                   whileHover={{ y: -5 }}
                   transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative overflow-hidden rounded-xl bg-white dark:bg-dark-card border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-lg transition-shadow duration-200 p-6 text-center h-full"
+                  className="relative overflow-hidden rounded-xl bg-white dark:bg-dark-card border border-slate-100 dark:border-white/20 shadow-sm hover:shadow-lg transition-shadow duration-200 p-6 text-center h-full"
                 >
                   <div className="w-16 h-16 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center mx-auto mb-4 group-hover:bg-secondary group-hover:text-white transition-all duration-300">
                     {iconMap[cat.slug] || <Wrench size={32} />}

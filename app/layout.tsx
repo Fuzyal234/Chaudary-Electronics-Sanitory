@@ -1,19 +1,34 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Plus_Jakarta_Sans, Public_Sans, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 import { AppProvider } from '@/context/AppContext';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import WhatsAppButton from '@/components/common/WhatsAppButton';
-import BackToTop from '@/components/common/BackToTop';
-import CartSidebar from '@/components/common/CartSidebar';
-import SearchModal from '@/components/common/SearchModal';
+import { AuthProvider } from '@/context/AuthContext';
+import { CatalogProvider } from '@/context/CatalogContext';
+import StorefrontChrome from '@/components/layout/StorefrontChrome';
 
-const inter = Inter({
+/* Display — Plus Jakarta Sans. Geometric enough to feel modern, humanist
+   enough to stay approachable at headline weight. */
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-jakarta',
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['500', '600', '700', '800'],
+});
+
+/* Body — Public Sans. Workmanlike, high legibility at small sizes. */
+const publicSans = Public_Sans({
+  subsets: ['latin'],
+  variable: '--font-public-sans',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+});
+
+/* Reference — IBM Plex Mono. Part numbers and spec codes only. */
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  variable: '--font-plex-mono',
+  display: 'swap',
+  weight: ['400', '500', '600'],
 });
 
 export const metadata: Metadata = {
@@ -33,17 +48,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${jakarta.variable} ${publicSans.variable} ${plexMono.variable}`}
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+    >
       <body className="font-body bg-bg dark:bg-dark-bg text-primary dark:text-slate-100 antialiased">
-        <AppProvider>
-          <Navbar />
-          <main className="animate-fade-in">{children}</main>
-          <Footer />
-          <WhatsAppButton />
-          <BackToTop />
-          <CartSidebar />
-          <SearchModal />
-        </AppProvider>
+        <AuthProvider>
+          <CatalogProvider>
+            <AppProvider>
+              <StorefrontChrome>{children}</StorefrontChrome>
+            </AppProvider>
+          </CatalogProvider>
+        </AuthProvider>
       </body>
     </html>
   );

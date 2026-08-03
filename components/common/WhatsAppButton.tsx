@@ -10,7 +10,7 @@ export default function WhatsAppButton() {
   const message = encodeURIComponent('Hello! I would like to inquire about your products.');
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed right-4 sm:right-6 bottom-[calc(1rem+env(safe-area-inset-bottom))] sm:bottom-6 z-50 flex flex-col items-end gap-3">
       <AnimatePresence>
         {open && (
           <motion.div
@@ -18,7 +18,7 @@ export default function WhatsAppButton() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="bg-white dark:bg-dark-card rounded-2xl shadow-2xl border border-slate-100 dark:border-white/10 overflow-hidden w-72"
+            className="bg-white dark:bg-dark-card rounded-2xl shadow-2xl border border-slate-100 dark:border-white/20 overflow-hidden w-[min(18rem,calc(100vw-2rem))]"
           >
             {/* Header */}
             <div className="bg-[#25D366] p-4 flex items-center justify-between">
@@ -62,7 +62,7 @@ export default function WhatsAppButton() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setOpen((v) => !v)}
-        className="relative w-14 h-14 bg-[#25D366] text-white rounded-full shadow-xl hover:shadow-2xl transition-shadow flex items-center justify-center"
+        className="relative w-[52px] h-[52px] sm:w-14 sm:h-14 bg-[#25D366] text-white rounded-full shadow-xl hover:shadow-2xl transition-shadow flex items-center justify-center"
       >
         <AnimatePresence mode="wait">
           {open ? (
@@ -80,7 +80,7 @@ export default function WhatsAppButton() {
         </AnimatePresence>
         {/* Pulse ring */}
         {!open && (
-          <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-30" />
+          <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-30 pointer-events-none" />
         )}
       </motion.button>
     </div>

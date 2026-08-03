@@ -23,7 +23,9 @@ export default function BackToTop() {
           whileHover={{ scale: 1.1, y: -2 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-24 right-6 z-50 w-12 h-12 bg-primary dark:bg-secondary text-accent dark:text-white rounded-xl shadow-xl hover:shadow-2xl transition-shadow flex items-center justify-center border border-white/20"
+          /* Sits clear of the WhatsApp bubble below it, and of the iOS home
+             indicator, at every screen size. */
+          className="fixed right-4 sm:right-6 bottom-[calc(5.75rem+env(safe-area-inset-bottom))] sm:bottom-24 z-40 w-11 h-11 sm:w-12 sm:h-12 bg-primary dark:bg-secondary text-white rounded-xl shadow-xl hover:shadow-2xl transition-shadow flex items-center justify-center border border-white/20"
           title="Back to top"
         >
           <ArrowUp size={20} />

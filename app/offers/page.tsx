@@ -3,23 +3,26 @@
 import { motion } from 'framer-motion';
 import { Percent, Flame, Zap, Star } from 'lucide-react';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { products } from '@/data/products';
+import { useCatalog } from '@/context/CatalogContext';
 import ProductCard from '@/components/products/ProductCard';
 import QuickViewModal from '@/components/products/QuickViewModal';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Product } from '@/types';
 
-const deals = products.filter((p) => p.discount && p.discount >= 15).sort((a, b) => (b.discount ?? 0) - (a.discount ?? 0));
-
 export default function OffersPage() {
+  const { products } = useCatalog();
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  const deals = useMemo(
+    () => products.filter((p) => p.discount && p.discount >= 15).sort((a, b) => (b.discount ?? 0) - (a.discount ?? 0)),
+    [products]
+  );
 
   return (
     <>
       <div className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#1a2f6e] to-secondary" />
         <div className="absolute top-0 left-1/3 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-        <div className="relative max-w-screen-2xl mx-auto px-6 lg:px-8 text-center">
+        <div className="relative max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
               <Flame size={16} className="text-accent" />
@@ -37,7 +40,7 @@ export default function OffersPage() {
 
       {/* Promo Codes */}
       <section className="py-12 bg-slate-50 dark:bg-dark-surface">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               { code: 'SANITARY25', desc: '25% OFF on all sanitary products', color: 'from-primary to-primary-light', icon: Star },
@@ -69,7 +72,7 @@ export default function OffersPage() {
 
       {/* Deals */}
       <section className="py-16 bg-bg dark:bg-dark-bg">
-        <div className="max-w-screen-2xl mx-auto px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
           <SectionHeader badge="On Sale Now" title="Discounted" highlight="Products" className="mb-12" />
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
             {deals.map((product, i) => (

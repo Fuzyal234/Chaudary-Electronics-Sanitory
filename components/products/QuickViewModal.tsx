@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingCart, Heart, ArrowRight, Plus, Minus } from 'lucide-react';
@@ -49,7 +49,7 @@ export default function QuickViewModal({ product, onClose }: Props) {
                   <X size={18} className="text-slate-500" />
                 </button>
                 <div className="aspect-square relative rounded-2xl overflow-hidden bg-white dark:bg-dark-card">
-                  <Image src={product.images[activeImage] || product.images[0]} alt={product.name} fill className="object-contain p-4" />
+                  <SmartImage src={product.images[activeImage] || product.images[0]} alt={product.name} fill className="object-contain p-4" />
                 </div>
                 {product.images.length > 1 && (
                   <div className="flex gap-2 mt-3">
@@ -59,7 +59,7 @@ export default function QuickViewModal({ product, onClose }: Props) {
                         onClick={() => setActiveImage(i)}
                         className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all relative ${activeImage === i ? 'border-secondary' : 'border-transparent'}`}
                       >
-                        <Image src={img} alt="" fill className="object-contain p-1" />
+                        <SmartImage src={img} alt="" fill className="object-contain p-1" />
                       </button>
                     ))}
                   </div>
