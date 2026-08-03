@@ -18,7 +18,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
   if (!category) notFound();
 
-  const products = getProductsByCategory(category.name);
+  const products = getProductsByCategory(category.slug);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 

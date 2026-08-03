@@ -168,9 +168,22 @@ export default function ProductForm({ product, onSubmit, onClose }: Props) {
             </div>
             <div>
               <label className={label}>Category *</label>
-              <input list="cat-list" value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Select or type" className={inputBorder('category')} />
-              <datalist id="cat-list">{categories.map((c) => <option key={c.id} value={c.name} />)}</datalist>
+              {/* A closed list, not a datalist. Free text here produced products
+                  that belonged to no department, so they never appeared in the
+                  nav, the department pages or any count. */}
+              <select value={category} onChange={(e) => setCategory(e.target.value)} className={inputBorder('category')}>
+                <option value="">Choose a department</option>
+                {categories.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
+                {category && !categories.some((c) => c.name === category) && (
+                  <option value={category}>{category} (not a department)</option>
+                )}
+              </select>
               {errors.category && <p className="mt-1 text-xs text-red-500">{errors.category}</p>}
+              {category && !categories.some((c) => c.name === category) && (
+                <p className="mt-1 text-xs text-amber-600">
+                  This product will not show up under any department until you pick one.
+                </p>
+              )}
             </div>
           </div>
 

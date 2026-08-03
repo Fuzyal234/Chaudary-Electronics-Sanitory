@@ -6,12 +6,21 @@ import Image from 'next/image';
 import { ArrowRight, Globe, Package, Calendar } from 'lucide-react';
 import { brands } from '@/data/brands';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useCatalog } from '@/context/CatalogContext';
 
 const allCountries = ['All', ...Array.from(new Set(brands.map((b) => b.country)))];
 
 export default function BrandsPage() {
+  const { products } = useCatalog();
   const [filter, setFilter] = useState('All');
+
+  /** Live per-brand totals rather than the figures baked into data/brands.ts. */
+  const brandCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const p of products) counts[p.brand] = (counts[p.brand] ?? 0) + 1;
+    return counts;
+  }, [products]);
   const filtered = filter === 'All' ? brands : brands.filter((b) => b.country === filter);
 
   return (
@@ -76,7 +85,7 @@ export default function BrandsPage() {
                     </div>
                     <div>
                       <Package size={14} className="text-slate-400 mx-auto mb-1" />
-                      <p className="text-xs text-slate-400">{brand.productCount}+ items</p>
+                      <p className="text-xs text-slate-400">{brandCounts[brand.name] ?? 0} items</p>
                     </div>
                     <div>
                       <Calendar size={14} className="text-slate-400 mx-auto mb-1" />

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Zap, Bath, Lightbulb, Droplets, Pipette, ToggleRight, Hammer, ShieldCheck, Wrench, Flame, Container } from 'lucide-react';
 import { categories } from '@/data/categories';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { useCatalog } from '@/context/CatalogContext';
 
 const iconMap: Record<string, React.ReactNode> = {
   sanitary:      <Bath size={22} />,
@@ -25,6 +26,7 @@ const featured = categories.slice(0, 8);
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function FeaturedCategories() {
+  const { categoryCounts } = useCatalog();
   return (
     <section className="py-14 sm:py-20 lg:py-24 bg-bg dark:bg-dark-bg">
       <div className="max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-10">
@@ -69,7 +71,7 @@ export default function FeaturedCategories() {
                   </h3>
                   <div className="flex items-center justify-between mt-2.5">
                     <span className="text-[13px] text-steel dark:text-slate-400">
-                      {cat.productCount} products
+                      {categoryCounts[cat.slug] === 1 ? '1 product' : `${categoryCounts[cat.slug] ?? 0} products`}
                     </span>
                     <ArrowRight
                       size={15}

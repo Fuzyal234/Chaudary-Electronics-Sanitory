@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Zap, Bath, Lightbulb, Droplets, Pipette, ToggleRight, Hammer, ShieldCheck, Wrench, Flame, Container, ChefHat, Paintbrush, Building2, Cog, DoorOpen } from 'lucide-react';
 import { categories } from '@/data/categories';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { useCatalog } from '@/context/CatalogContext';
 
 const iconMap: Record<string, React.ReactNode> = {
   sanitary: <Bath size={32} />,
@@ -28,6 +29,7 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 export default function CategoriesPage() {
+  const { categoryCounts } = useCatalog();
   return (
     <div>
       <div className="bg-primary py-16">
@@ -61,7 +63,9 @@ export default function CategoriesPage() {
                     {iconMap[cat.slug] || <Wrench size={32} />}
                   </div>
                   <h3 className="font-bold text-primary dark:text-white text-sm leading-tight group-hover:text-secondary transition-colors mb-1">{cat.name}</h3>
-                  <p className="text-xs text-slate-400">{cat.productCount}+ products</p>
+                  <p className="text-xs text-slate-400">
+                    {categoryCounts[cat.slug] === 1 ? '1 product' : `${categoryCounts[cat.slug] ?? 0} products`}
+                  </p>
                   <div className="flex items-center justify-center gap-1 mt-3 text-secondary text-xs font-semibold opacity-0 group-hover:opacity-100 transition-all">
                     Browse <ArrowRight size={12} />
                   </div>

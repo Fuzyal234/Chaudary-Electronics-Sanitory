@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, ArrowRight } from 'lucide-react';
 import { categories } from '@/data/categories';
+import { useCatalog } from '@/context/CatalogContext';
 import { STORE } from '@/lib/store';
 import { useState } from 'react';
 import Logo from '@/components/layout/Logo';
@@ -50,6 +51,7 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const { categoryCounts } = useCatalog();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -157,7 +159,7 @@ export default function Footer() {
                     className="group flex items-center justify-between py-2.5 border-b border-white/20 text-[14px] text-white/75 hover:text-white transition-colors"
                   >
                     {cat.name}
-                    <span className="text-[12.5px] text-white/60 group-hover:text-accent-light transition-colors">{cat.productCount}</span>
+                    <span className="text-[12.5px] text-white/60 group-hover:text-accent-light transition-colors">{categoryCounts[cat.slug] ?? 0}</span>
                   </Link>
                 </li>
               ))}

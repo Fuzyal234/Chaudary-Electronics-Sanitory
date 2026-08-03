@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useMemo, useCall
 import { Product } from '@/types';
 import { products as seedProducts } from '@/data/products';
 import { supabase } from '@/lib/supabase/client';
+import { countByDepartment, productsInDepartment } from '@/lib/categories';
 import {
   fetchProducts,
   insertProduct,
@@ -48,7 +49,11 @@ interface CatalogContextType {
   syncing: boolean;
   // Read helpers — mirror the former data/products.ts API.
   getProductById: (id: string) => Product | undefined;
+  /** Accepts a department slug or its display name. */
   getProductsByCategory: (category: string) => Product[];
+  /** Live product count per department slug, so every badge on the site
+   *  reports the same number as the department page it links to. */
+  categoryCounts: Record<string, number>;
   getFeaturedProducts: () => Product[];
   getBestSellers: () => Product[];
   getNewArrivals: () => Product[];
@@ -114,9 +119,10 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
 
   const getProductById = useCallback((id: string) => products.find((p) => p.id === id), [products]);
   const getProductsByCategory = useCallback(
-    (category: string) => products.filter((p) => p.category.toLowerCase() === category.toLowerCase()),
+    (category: string) => productsInDepartment(products, category),
     [products]
   );
+  const categoryCounts = useMemo(() => countByDepartment(products), [products]);
   const getFeaturedProducts = useCallback(() => products.filter((p) => p.isFeatured), [products]);
   const getBestSellers = useCallback(() => products.filter((p) => p.isBestSeller), [products]);
   const getNewArrivals = useCallback(() => products.filter((p) => p.isNew), [products]);
@@ -218,6 +224,7 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
         syncing,
         getProductById,
         getProductsByCategory,
+        categoryCounts,
         getFeaturedProducts,
         getBestSellers,
         getNewArrivals,

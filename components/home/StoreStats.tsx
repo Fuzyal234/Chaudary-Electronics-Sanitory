@@ -1,18 +1,26 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { useCatalog } from '@/context/CatalogContext';
+import { categories } from '@/data/categories';
 
-/** The record. Six figures, no icons — the numbers are the argument. */
-const stats = [
-  { value: 10000, suffix: '+', label: 'Customers served', note: 'Homeowners, plumbers and contractors' },
-  { value: 850,   suffix: '+', label: 'Products stocked', note: 'Across 18 departments' },
-  { value: 13,    suffix: '',  label: 'Brands carried', note: 'Master, Sonex, Schneider, Philips and more' },
-  { value: 22,    suffix: '',  label: 'Years at the counter', note: 'Trading in Lahore since 2003' },
-  { value: 50000, suffix: '+', label: 'Orders delivered', note: 'Punjab and nationwide' },
-  { value: 4.9,   suffix: '/5', label: 'Customer rating', note: 'Average across verified orders', decimal: true },
-];
+/**
+ * The record. Figures marked `live` are counted from the catalog on every
+ * render; the rest are business facts the storefront cannot derive and that
+ * have to be maintained by hand.
+ */
+function buildStats(productTotal: number, brandTotal: number) {
+  return [
+    { value: 10000, suffix: '+', label: 'Customers served', note: 'Homeowners, plumbers and contractors' },
+    { value: productTotal, suffix: '', label: 'Products stocked', note: `Across ${categories.length} departments`, live: true },
+    { value: brandTotal, suffix: '', label: 'Brands carried', note: 'Master, Sonex, Schneider, Philips and more', live: true },
+    { value: 22, suffix: '', label: 'Years at the counter', note: 'Trading in Lahore since 2003' },
+    { value: 50000, suffix: '+', label: 'Orders delivered', note: 'Punjab and nationwide' },
+    { value: 4.9, suffix: '/5', label: 'Customer rating', note: 'Average across verified orders', decimal: true },
+  ];
+}
 
 function CountUp({ target, suffix, decimal }: { target: number; suffix: string; decimal?: boolean }) {
   const [count, setCount] = useState(0);
@@ -46,6 +54,10 @@ function CountUp({ target, suffix, decimal }: { target: number; suffix: string; 
 }
 
 export default function StoreStats() {
+  const { products } = useCatalog();
+  const brandTotal = useMemo(() => new Set(products.map((p) => p.brand)).size, [products]);
+  const stats = useMemo(() => buildStats(products.length, brandTotal), [products.length, brandTotal]);
+
   return (
     <section className="relative py-14 sm:py-20 lg:py-24 field-dark text-white overflow-hidden">
       <div className="absolute inset-0 dotfield opacity-35 pointer-events-none" />
@@ -72,7 +84,7 @@ export default function StoreStats() {
               className="card-dark p-7 lg:p-8"
             >
               <div className="t-figure text-[2.4rem] lg:text-[3rem] leading-none text-white">
-                <CountUp target={stat.value} suffix={stat.suffix} decimal={stat.decimal} />
+                <CountUp key={stat.value} target={stat.value} suffix={stat.suffix} decimal={stat.decimal} />
               </div>
               <div className="font-display font-semibold text-[15px] text-white mt-4">{stat.label}</div>
               <div className="text-[13px] text-white/70 mt-1.5 leading-relaxed">{stat.note}</div>

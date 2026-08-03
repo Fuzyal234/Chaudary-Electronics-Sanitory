@@ -12,6 +12,7 @@ import {
 import { useApp } from '@/context/AppContext';
 import { useAuth } from '@/context/AuthContext';
 import { categories } from '@/data/categories';
+import { useCatalog } from '@/context/CatalogContext';
 import { STORE } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import Logo from '@/components/layout/Logo';
@@ -51,6 +52,8 @@ const navLinks = [
 export default function Navbar() {
   const { cartCount, wishlistCount, darkMode, toggleDarkMode, setCartOpen, setWishlistOpen, setSearchOpen } = useApp();
   const { user } = useAuth();
+  const { categoryCounts, products } = useCatalog();
+  const catalogTotal = products.length;
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -254,7 +257,7 @@ export default function Navbar() {
                         <div className="font-display font-semibold text-[13.5px] text-primary dark:text-white leading-tight truncate">
                           {cat.name}
                         </div>
-                        <div className="text-[12px] text-steel dark:text-slate-400 mt-0.5">{cat.productCount} items</div>
+                        <div className="text-[12px] text-steel dark:text-slate-400 mt-0.5">{categoryCounts[cat.slug] ?? 0} items</div>
                       </div>
                     </Link>
                   ))}
@@ -262,7 +265,7 @@ export default function Navbar() {
 
                 <div className="mt-6 pt-5 border-t border-[var(--hair)] flex items-center justify-between">
                   <p className="text-[13.5px] text-steel dark:text-slate-400">
-                    {categories.reduce((s, c) => s + c.productCount, 0)}+ items in stock
+                    {catalogTotal} {catalogTotal === 1 ? 'item' : 'items'} in stock
                   </p>
                   <Link
                     href="/categories"
@@ -320,7 +323,7 @@ export default function Navbar() {
                   >
                     <span className="text-secondary dark:text-blue-300">{categoryIcons[cat.slug] || <Wrench size={17} />}</span>
                     <span className="text-[14px] text-primary dark:text-slate-200">{cat.name}</span>
-                    <span className="ml-auto text-[12px] text-steel">{cat.productCount}</span>
+                    <span className="ml-auto text-[12px] text-steel">{categoryCounts[cat.slug] ?? 0}</span>
                   </Link>
                 ))}
               </div>

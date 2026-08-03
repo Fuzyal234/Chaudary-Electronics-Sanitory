@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { SlidersHorizontal, Grid3X3, List, X, Search } from 'lucide-react';
 import { useCatalog } from '@/context/CatalogContext';
 import { categories } from '@/data/categories';
+import { departmentOf } from '@/lib/categories';
 import { brands } from '@/data/brands';
 import { FilterState, Product } from '@/types';
 import ProductCard from '@/components/products/ProductCard';
@@ -22,7 +23,14 @@ const defaultFilters: FilterState = {
 };
 
 export default function ProductsPage() {
-  const { products: allProducts } = useCatalog();
+  const { products: allProducts, categoryCounts } = useCatalog();
+
+  /** Live per-brand totals, so the sidebar never advertises stock that is not there. */
+  const brandCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const p of allProducts) counts[p.brand] = (counts[p.brand] ?? 0) + 1;
+    return counts;
+  }, [allProducts]);
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,7 +44,12 @@ export default function ProductsPage() {
         p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
       );
     }
-    if (filters.categories.length > 0) result = result.filter((p) => filters.categories.includes(p.category));
+    if (filters.categories.length > 0) {
+      result = result.filter((p) => {
+        const dept = departmentOf(p);
+        return dept ? filters.categories.includes(dept) : false;
+      });
+    }
     if (filters.brands.length > 0) result = result.filter((p) => filters.brands.includes(p.brand));
     result = result.filter((p) => p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]);
 
@@ -87,12 +100,12 @@ export default function ProductsPage() {
             <label key={cat.id} className="flex items-center gap-2 cursor-pointer py-1 group">
               <input
                 type="checkbox"
-                checked={filters.categories.includes(cat.name)}
-                onChange={() => toggleCategory(cat.name)}
+                checked={filters.categories.includes(cat.slug)}
+                onChange={() => toggleCategory(cat.slug)}
                 className="w-3.5 h-3.5 rounded accent-secondary"
               />
               <span className="text-sm text-slate-600 dark:text-slate-300 flex-1 group-hover:text-secondary transition-colors">{cat.name}</span>
-              <span className="text-xs text-slate-400">{cat.productCount}</span>
+              <span className="text-xs text-slate-400">{categoryCounts[cat.slug] ?? 0}</span>
             </label>
           ))}
         </div>
@@ -110,7 +123,8 @@ export default function ProductsPage() {
                 onChange={() => toggleBrand(brand.name)}
                 className="w-3.5 h-3.5 rounded accent-secondary"
               />
-              <span className="text-sm text-slate-600 dark:text-slate-300 group-hover:text-secondary transition-colors">{brand.name}</span>
+              <span className="text-sm text-slate-600 dark:text-slate-300 flex-1 group-hover:text-secondary transition-colors">{brand.name}</span>
+              <span className="text-xs text-slate-400">{brandCounts[brand.name] ?? 0}</span>
             </label>
           ))}
         </div>
@@ -188,8 +202,8 @@ export default function ProductsPage() {
               <div className="flex flex-wrap gap-2 mb-4">
                 {filters.categories.map((cat) => (
                   <span key={cat} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 text-xs rounded-full">
-                    {cat}
-                    <button onClick={() => toggleCategory(cat)}><X size={10} /></button>
+                    {categories.find((c) => c.slug === cat)?.name ?? cat}
+                    <button onClick={() => toggleCategory(cat)} aria-label="Remove filter"><X size={10} /></button>
                   </span>
                 ))}
                 {filters.brands.map((brand) => (
